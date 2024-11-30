@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start:dev": "nodemon",
+    "start:prod": "node dist/index.js"
   },
   "keywords": [],
   "author": {
@@ -17,5 +20,13 @@
       "url": "https://github.com/duyk16/safe-chatbot/LICENSE"
     }
   ],
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "natural": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.7.2"
+  }
 }
