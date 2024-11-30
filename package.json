@@ -1,0 +1,21 @@
+{
+  "name": "safe-chatbot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Nguyen Van Duy",
+    "email": "duyk16@gmail.com",
+    "url": "https://github.com/duyk16"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/duyk16/safe-chatbot/LICENSE"
+    }
+  ],
+  "description": ""
+}
