@@ -48,7 +48,7 @@ describe('log module', () => {
       log.logUserInput(userId, userInput, { logPath: TEST_LOG_PATH });
 
       const logContent = fs.readFileSync(TEST_LOG_PATH, 'utf8');
-      expect(logContent).to.include(`user-id:${userId}`);
+      expect(logContent).to.include(`user-id: ${userId}`);
       expect(logContent).to.include(`input: ${userInput}`);
     });
   });
@@ -60,7 +60,7 @@ describe('log module', () => {
       log.logBotResponse(userId, response, { logPath: TEST_LOG_PATH });
 
       const logContent = fs.readFileSync(TEST_LOG_PATH, 'utf8');
-      expect(logContent).to.include(`user-id:${userId}`);
+      expect(logContent).to.include(`user-id: ${userId}`);
       expect(logContent).to.include(`response: ${response}`);
     });
   });

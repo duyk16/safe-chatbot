@@ -5,6 +5,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "vitest",
+    "test:e2e": "vitest e2e/**.spec.ts",
     "test:coverage": "vitest --coverage",
     "build": "tsc",
     "start:dev": "nodemon",

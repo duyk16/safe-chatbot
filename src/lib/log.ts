@@ -40,7 +40,7 @@ export function logUserInput(
   userInput: string,
   opts = { logPath: DEFAULT_LOG_PATH },
 ) {
-  const logEntry = `${new Date().toISOString()} | user-id:${userId} | input: ${userInput}\n`;
+  const logEntry = `${new Date().toISOString()} | user-id: ${userId} | input: ${userInput}\n`;
   createLog(logEntry, opts);
 }
 
@@ -54,6 +54,6 @@ export function logBotResponse(
   response: string,
   opts = { logPath: DEFAULT_LOG_PATH },
 ) {
-  const logEntry = `${new Date().toISOString()} | user-id:${userId} | response: ${response}\n`;
+  const logEntry = `${new Date().toISOString()} | user-id: ${userId} | response: ${response}\n`;
   createLog(logEntry, opts);
 }
