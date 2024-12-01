@@ -1,27 +1,47 @@
-import * as path from "path";
-import * as fs from "fs";
+import * as path from 'path';
+import * as fs from 'fs';
 
-const DEFAULT_LOG_PATH = "logs/chatbot_log.txt"
+import { DEFAULT_LOG_PATH } from '../config';
 
 /**
  * Create a log entry in the specified log file.
  * @param message - The message to log.
  * @param logPath - The path to the log file.
  */
-export async function createLog(message: string, logPath: string = DEFAULT_LOG_PATH) {
-  const logFilePath = path.join(__dirname, logPath);
-  fs.appendFileSync(logFilePath, message, "utf8");
-}
+export function createLog(
+  message: string,
+  opts = { logPath: DEFAULT_LOG_PATH },
+) {
+  const logFilePath = path.join(process.cwd(), opts.logPath);
 
+  // Check if the log file exists
+  if (!fs.existsSync(logFilePath)) {
+    const logDir = path.dirname(logFilePath);
+
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
+
+    // Create the log file
+    fs.writeFileSync(logFilePath, '', 'utf8');
+  }
+
+  fs.appendFileSync(logFilePath, message, 'utf8');
+}
 
 /**
  * Log the user's input message to a file.
  * @param userId - The user ID.
  * @param userInput - The user's input message.
  */
-export async function logUserInput(userId: string, userInput: string) {
+export function logUserInput(
+  userId: string,
+  userInput: string,
+  opts = { logPath: DEFAULT_LOG_PATH },
+) {
   const logEntry = `${new Date().toISOString()} | user-id:${userId} | input: ${userInput}\n`;
-  await createLog(logEntry);
+  createLog(logEntry, opts);
 }
 
 /**
@@ -29,7 +49,11 @@ export async function logUserInput(userId: string, userInput: string) {
  * @param userId - The user ID.
  * @param response - The chatbot's response.
  */
-export async function logBotResponse(userId: string, response: string) {
+export function logBotResponse(
+  userId: string,
+  response: string,
+  opts = { logPath: DEFAULT_LOG_PATH },
+) {
   const logEntry = `${new Date().toISOString()} | user-id:${userId} | response: ${response}\n`;
-  await createLog(logEntry);
+  createLog(logEntry, opts);
 }

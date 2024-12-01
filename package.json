@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --require ts-node/register src/**/*.spec.ts",
     "lint": "eslint .",
     "build": "tsc",
     "start:dev": "nodemon",
     "start:prod": "node dist/index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "chatbot",
+    "safe-chatbot",
+    "profanity-filter",
+    "nlp"
+  ],
   "author": {
     "name": "Nguyen Van Duy",
     "email": "duyk16@gmail.com",
@@ -23,13 +28,20 @@
   ],
   "description": "",
   "dependencies": {
-    "natural": "^8.0.1"
+    "natural": "^8.0.1",
+    "sinon": "^19.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
+    "@types/chai": "^5.0.1",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.1",
+    "@types/sinon": "^17.0.3",
+    "chai": "^5.1.2",
     "eslint": "^9.16.0",
+    "mocha": "^10.8.2",
     "nodemon": "^3.1.7",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.16.0"
   }
