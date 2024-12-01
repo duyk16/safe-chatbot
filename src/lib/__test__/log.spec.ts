@@ -1,13 +1,13 @@
-import { expect } from 'chai';
 import * as fs from 'fs';
+import { afterAll, describe, expect, test } from 'vitest';
+import path from 'path';
 
 import * as log from '../log';
-import path from 'path';
 
 const TEST_LOG_PATH = 'test-log/test.log';
 
-describe('log library', () => {
-  after(async () => {
+describe('log module', () => {
+  afterAll(async () => {
     // remove the test log file
     if (fs.existsSync(TEST_LOG_PATH)) {
       fs.unlinkSync(TEST_LOG_PATH);
@@ -20,7 +20,7 @@ describe('log library', () => {
   });
 
   describe('createLog', () => {
-    it('should create log directory and file if they do not exist', () => {
+    test('should create log directory and file if they do not exist', () => {
       const message = 'Hello, world!';
 
       log.createLog(message, { logPath: TEST_LOG_PATH });
@@ -28,7 +28,7 @@ describe('log library', () => {
       expect(fs.existsSync(TEST_LOG_PATH)).to.eq(true);
     });
 
-    it('should append to the log file if it already exists', () => {
+    test('should append to the log file if it already exists', () => {
       const message1 = 'Hello, world!';
       const message2 = 'How are you?';
 
@@ -42,7 +42,7 @@ describe('log library', () => {
   });
 
   describe('logUserInput', () => {
-    it('should create a log entry for user input', async () => {
+    test('should create a log entry for user input', async () => {
       const userId = 'test-user';
       const userInput = 'Hello, world!';
       log.logUserInput(userId, userInput, { logPath: TEST_LOG_PATH });
@@ -54,7 +54,7 @@ describe('log library', () => {
   });
 
   describe('logBotResponse', () => {
-    it('should create a log entry for bot response', async () => {
+    test('should create a log entry for bot response', async () => {
       const userId = 'test-user';
       const response = 'Hello, human!';
       log.logBotResponse(userId, response, { logPath: TEST_LOG_PATH });

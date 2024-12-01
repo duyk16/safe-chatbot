@@ -5,7 +5,7 @@ import { BOT_MESSAGES } from './config';
 /**
  * Main chatbot function for handling user input and generating responses.
  */
-async function main(): Promise<void> {
+export async function main(): Promise<void> {
   const rl = readline.createInterface(process.stdin, process.stdout);
 
   console.log(BOT_MESSAGES.WELCOME_MESSAGE);
