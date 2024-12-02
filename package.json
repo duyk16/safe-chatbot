@@ -4,12 +4,12 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "vitest",
+    "test": "vitest --dir src",
     "test:e2e": "vitest e2e/**.spec.ts",
     "test:coverage": "vitest --coverage",
     "build": "tsc",
     "start:dev": "nodemon",
-    "start:prod": "node dist/index.js"
+    "start:prod": "node dist/src/index.js"
   },
   "keywords": [
     "chatbot",

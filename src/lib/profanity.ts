@@ -1,5 +1,5 @@
 import { WordTokenizer } from 'natural';
-import { DEFAULT_DISALLOWED_WORDS } from '../config';
+import { config } from '../config';
 
 // Tokenizer to break input into words
 const tokenizer = new WordTokenizer();
@@ -38,7 +38,7 @@ export function processObfuscations(input: string): string {
  */
 export function isDisallowedContent(
   input: string,
-  disallowedWords: string[] = DEFAULT_DISALLOWED_WORDS,
+  disallowedWords: string[] = config.DEFAULT_DISALLOWED_WORDS,
 ): boolean {
   const str = processObfuscations(input);
   const tokens = tokenizer.tokenize(str.toLowerCase());

@@ -1,4 +1,4 @@
-export const DEFAULT_DISALLOWED_WORDS = [
+const DEFAULT_DISALLOWED_WORDS = [
   'hack',
   'hacking',
   'scam',
@@ -9,9 +9,10 @@ export const DEFAULT_DISALLOWED_WORDS = [
   'stupid',
 ];
 
-export const DEFAULT_LOG_PATH = 'logs/chatbot_log.txt';
+const DEFAULT_LOG_PATH = 'logs/chatbot_log.txt';
+const IS_ENABLED_CLASSIFIER = false;
 
-export const BOT_MESSAGES = {
+const BOT_MESSAGES = {
   WELCOME_MESSAGE:
     "Welcome to the chatbot! Type 'exit' or 'quit' to end the session.",
   REQUEST_USER_ID: 'Enter your User ID: ',
@@ -24,4 +25,9 @@ export const BOT_MESSAGES = {
   END_SESSION: 'Chatbot session ended.',
 };
 
-export * as config from './config';
+export const config = {
+  DEFAULT_DISALLOWED_WORDS,
+  DEFAULT_LOG_PATH,
+  BOT_MESSAGES,
+  IS_ENABLED_CLASSIFIER,
+};

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { DEFAULT_LOG_PATH } from '../config';
+import { config } from '../config';
 
 /**
  * Create a log entry in the specified log file.
@@ -10,7 +10,7 @@ import { DEFAULT_LOG_PATH } from '../config';
  */
 export function createLog(
   message: string,
-  opts = { logPath: DEFAULT_LOG_PATH },
+  opts = { logPath: config.DEFAULT_LOG_PATH },
 ) {
   const logFilePath = path.join(process.cwd(), opts.logPath);
 
@@ -38,7 +38,7 @@ export function createLog(
 export function logUserInput(
   userId: string,
   userInput: string,
-  opts = { logPath: DEFAULT_LOG_PATH },
+  opts = { logPath: config.DEFAULT_LOG_PATH },
 ) {
   const logEntry = `${new Date().toISOString()} | user-id: ${userId} | input: ${userInput}\n`;
   createLog(logEntry, opts);
@@ -52,7 +52,7 @@ export function logUserInput(
 export function logBotResponse(
   userId: string,
   response: string,
-  opts = { logPath: DEFAULT_LOG_PATH },
+  opts = { logPath: config.DEFAULT_LOG_PATH },
 ) {
   const logEntry = `${new Date().toISOString()} | user-id: ${userId} | response: ${response}\n`;
   createLog(logEntry, opts);

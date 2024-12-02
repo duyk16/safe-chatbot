@@ -1,6 +1,7 @@
-import { BOT_MESSAGES } from '../config';
+import { config } from '../config';
 import * as log from './log';
 import * as profanity from './profanity';
+import * as classifier from './classifier';
 
 export enum MessageType {
   UpdateUserId = 'UpdateUserId',
@@ -28,12 +29,15 @@ export function createMessage(message: string) {
   log.logUserInput(userId, message);
 
   let response = '';
+  const result = config.IS_ENABLED_CLASSIFIER
+    ? classifier.isDisallowedContent(message)
+    : profanity.isDisallowedContent(message);
 
   // Check for disallowed words
-  if (profanity.isDisallowedContent(message)) {
-    response = BOT_MESSAGES.RESPONSE_DISALLOWED_CONTENT;
+  if (result) {
+    response = config.BOT_MESSAGES.RESPONSE_DISALLOWED_CONTENT;
   } else {
-    response = `${BOT_MESSAGES.RESPONSE_ALLOWED_CONTENT}${message}`;
+    response = `${config.BOT_MESSAGES.RESPONSE_ALLOWED_CONTENT}${message}`;
   }
 
   // Log chatbot response

@@ -1,6 +1,8 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
+import * as log from '../log';
 import * as message from '../message';
+import * as profanity from '../profanity';
 
 describe('message module', () => {
   beforeEach(() => {});
@@ -9,7 +11,7 @@ describe('message module', () => {
     vi.resetAllMocks();
   });
 
-  describe.only('updateUserId', () => {
+  describe('updateUserId', () => {
     test('should update the userId', () => {
       const spy = vi.spyOn(message, 'updateUserId');
 
@@ -19,44 +21,47 @@ describe('message module', () => {
     });
   });
 
-  // describe('createMessage', () => {
-  //   it('should log user input and bot response', () => {
-  //     isDisallowedContentStub.returns(false);
-  //     const response = message.createMessage('hello');
+  describe('createMessage', () => {
+    test('should return original content message if message not contains disallowed content', () => {
+      const logUserInputSpy = vi
+        .spyOn(log, 'logUserInput')
+        .mockImplementation(() => {});
+      const logBotResponseSpy = vi
+        .spyOn(log, 'logBotResponse')
+        .mockImplementation(() => {});
+      const isDisallowedContentSpy = vi
+        .spyOn(profanity, 'isDisallowedContent')
+        .mockReturnValue(false);
 
-  //     expect(logUserInputStub.calledOnce).to.be.true;
-  //     expect(logBotResponseStub.calledOnce).to.be.true;
-  //     expect(response).to.equal(
-  //       `${BOT_MESSAGES.RESPONSE_ALLOWED_CONTENT}hello`,
-  //     );
-  //   });
+      message.createMessage('hello');
+      const response = message.createMessage('hello');
 
-  //   it('should return disallowed content message if message contains disallowed content', () => {
-  //     isDisallowedContentStub.returns(true);
-  //     const response = createMessage('badword');
-  //     expect(logUserInputStub.calledOnce).to.be.true;
-  //     expect(logBotResponseStub.calledOnce).to.be.true;
-  //     expect(response).to.equal(BOT_MESSAGES.RESPONSE_DISALLOWED_CONTENT);
-  //   });
-  // });
+      expect(logUserInputSpy).toHaveBeenCalled();
+      expect(logBotResponseSpy).toHaveBeenCalled();
+      expect(isDisallowedContentSpy).toHaveBeenCalled();
+      expect(response).toBe('Chatbot: I hear you say: hello');
+    });
 
-  // describe('handleMessage', () => {
-  //   it('should call updateUserId when message type is UpdateUserId', () => {
-  //     const updateUserIdSpy = sinon.spy(updateUserId);
-  //     handleMessage(MessageType.UpdateUserId, 'newUserId');
-  //     expect(updateUserIdSpy.calledOnce).to.be.true;
-  //   });
+    test('should return disallowed content message if message contains disallowed content', () => {
+      const logUserInputSpy = vi
+        .spyOn(log, 'logUserInput')
+        .mockImplementation(() => {});
+      const logBotResponseSpy = vi
+        .spyOn(log, 'logBotResponse')
+        .mockImplementation(() => {});
+      const isDisallowedContentSpy = vi
+        .spyOn(profanity, 'isDisallowedContent')
+        .mockReturnValue(true);
 
-  //   it('should call createMessage when message type is CreateMessage', () => {
-  //     const createMessageSpy = sinon.spy(createMessage);
-  //     handleMessage(MessageType.CreateMessage, 'hello');
-  //     expect(createMessageSpy.calledOnce).to.be.true;
-  //   });
+      message.createMessage('hello');
+      const response = message.createMessage('hello');
 
-  //   it('should throw an error for invalid message type', () => {
-  //     expect(() =>
-  //       handleMessage('InvalidType' as MessageType, 'payload'),
-  //     ).to.throw('Invalid message type');
-  //   });
-  // });
+      expect(logUserInputSpy).toHaveBeenCalled();
+      expect(logBotResponseSpy).toHaveBeenCalled();
+      expect(isDisallowedContentSpy).toHaveBeenCalled();
+      expect(response).toBe(
+        `Chatbot: I'm sorry, but I can't assist with that request.`,
+      );
+    });
+  });
 });

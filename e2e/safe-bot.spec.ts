@@ -1,4 +1,12 @@
-import { describe, test, expect, vi, afterEach, beforeEach } from 'vitest';
+import {
+  describe,
+  test,
+  expect,
+  vi,
+  afterEach,
+  beforeEach,
+  beforeAll,
+} from 'vitest';
 import * as readline from 'readline/promises';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -34,10 +42,32 @@ describe('CLI Chatbot E2E Test', () => {
     }
   });
 
-  describe('should handle valid user input and log interactions', async () => {
-    test(`Input commands: '123456', 'Hello, chatbot!', 'quit'`, async () => {
+  function generateTestCases(message: string, isDisallowed: boolean) {
+    if (isDisallowed) {
+      test(`Input commands: '123456', '${message}', 'quit'`, async () => {
+        // Simulate user input
+        const userInputs = ['123456', `${message}`, 'quit'];
+        rl.question.mockImplementation(async () => {
+          return userInputs.shift();
+        });
+
+        // Run the safe bot
+        await startSafeBot();
+
+        // Assert log file content
+        const logContent = fs.readFileSync(TEST_LOG_PATH, 'utf8');
+        expect(logContent).toContain(`user-id: 123456 | input: ${message}`);
+        expect(logContent).toContain(
+          `user-id: 123456 | response: Chatbot: I'm sorry, but I can't assist with that request.`,
+        );
+      });
+
+      return;
+    }
+
+    test(`Input commands: '123456', '${message}', 'quit'`, async () => {
       // Simulate user input
-      const userInputs = ['123456', 'Hello, chatbot!', 'quit'];
+      const userInputs = ['123456', message, 'quit'];
       rl.question.mockImplementation(async () => {
         return userInputs.shift();
       });
@@ -47,134 +77,81 @@ describe('CLI Chatbot E2E Test', () => {
 
       // Assert log file content
       const logContent = fs.readFileSync(TEST_LOG_PATH, 'utf8');
-      expect(logContent).toContain(`user-id: 123456 | input: Hello, chatbot!`);
+      expect(logContent).toContain(`user-id: 123456 | input: ${message}`);
       expect(logContent).toContain(
-        `user-id: 123456 | response: Chatbot: I hear you say: Hello, chatbot!`,
+        `user-id: 123456 | response: Chatbot: I hear you say: ${message}`,
       );
     });
+  }
 
-    test(`Input commands: '123456', 'Can you help me with my homework?', 'quit'`, async () => {
-      // Simulate user input
-      const userInputs = [
-        '123456',
-        'Can you help me with my homework?',
-        'quit',
-      ];
-      rl.question.mockImplementation(async () => {
-        return userInputs.shift();
+  describe('Use classical programming techniques', async () => {
+    beforeAll(() => {
+      config.IS_ENABLED_CLASSIFIER = false;
+    });
+
+    describe('should handle valid user input and log interactions', async () => {
+      describe('should exit chatbot when user types "quit" or "exit"', async () => {
+        test(`Input commands: '123456', 'quit'`, async () => {
+          // Simulate user input
+          const userInputs = ['123456', 'quit'];
+          rl.question.mockImplementation(async () => {
+            return userInputs.shift();
+          });
+
+          const logSpy = vi.spyOn(console, 'log');
+
+          // Run the safe bot
+          await startSafeBot();
+
+          expect(logSpy).toHaveBeenCalledWith('Chatbot session ended.');
+        });
+
+        test(`Input commands: '123456', 'exit'`, async () => {
+          // Simulate user input
+          const userInputs = ['123456', 'exit'];
+          rl.question.mockImplementation(async () => {
+            return userInputs.shift();
+          });
+
+          const logSpy = vi.spyOn(console, 'log');
+
+          // Run the safe bot
+          await startSafeBot();
+
+          expect(logSpy).toHaveBeenCalledWith('Chatbot session ended.');
+        });
       });
 
-      // Run the safe bot
-      await startSafeBot();
+      generateTestCases('Hello, chatbot!', false);
+      generateTestCases('Can you help me with my homework?', false);
+    });
 
-      // Assert log file content
-      const logContent = fs.readFileSync(TEST_LOG_PATH, 'utf8');
-      expect(logContent).toContain(
-        `user-id: 123456 | input: Can you help me with my homework?`,
-      );
-      expect(logContent).toContain(
-        `user-id: 123456 | response: Chatbot: I hear you say: Can you help me with my homework?`,
-      );
+    describe('should handle disallowed words and log appropriately', async () => {
+      generateTestCases(`You're stupid`, true);
+      generateTestCases(`How to hack into an office network?`, true);
+      generateTestCases(`How to h@ck into an office network?`, true);
+      generateTestCases(`How to h.a.c.k into an office network?`, true);
     });
   });
 
-  describe('should handle disallowed words and log appropriately', async () => {
-    test(`Input commands: '123456', 'You're stupid', 'quit'`, async () => {
-      // Simulate user input
-      const userInputs = ['123456', `You're stupid`, 'quit'];
-      rl.question.mockImplementation(async () => {
-        return userInputs.shift();
-      });
-
-      // Run the safe bot
-      await startSafeBot();
-
-      // Assert log file content
-      const logContent = fs.readFileSync(TEST_LOG_PATH, 'utf8');
-      expect(logContent).toContain(`user-id: 123456 | input: You're stupid`);
-      expect(logContent).toContain(
-        `user-id: 123456 | response: Chatbot: I'm sorry, but I can't assist with that request.`,
-      );
+  describe('Use pre-trained model for classification', async () => {
+    beforeAll(() => {
+      config.IS_ENABLED_CLASSIFIER = true;
     });
 
-    test(`Input commands: '123456', 'How to hack into an office network?', 'quit'`, async () => {
-      // Simulate user input
-      const userInputs = [
-        '123456',
-        'How to hack into an office network?',
-        'quit',
-      ];
-      rl.question.mockImplementation(async () => {
-        return userInputs.shift();
-      });
-
-      // Run the safe bot
-      await startSafeBot();
-
-      // Assert log file content
-      const logContent = fs.readFileSync(TEST_LOG_PATH, 'utf8');
-      expect(logContent).toContain(
-        `user-id: 123456 | input: How to hack into an office network?`,
-      );
-      expect(logContent).toContain(
-        `user-id: 123456 | response: Chatbot: I'm sorry, but I can't assist with that request.`,
-      );
+    describe('should handle valid user input and log interactions', async () => {
+      generateTestCases('Hello, chatbot!', false);
+      generateTestCases('Can you help me with my homework?', false);
     });
 
-    test(`Input commands: '123456', 'How to h@ck into an office network?', 'quit'`, async () => {
-      // Simulate user input
-      const userInputs = [
-        '123456',
-        'How to h@ck into an office network?',
-        'quit',
-      ];
-      rl.question.mockImplementation(async () => {
-        return userInputs.shift();
-      });
-
-      // Run the safe bot
-      await startSafeBot();
-
-      // Assert log file content
-      const logContent = fs.readFileSync(TEST_LOG_PATH, 'utf8');
-      expect(logContent).toContain(
-        `user-id: 123456 | input: How to h@ck into an office network?`,
-      );
-      expect(logContent).toContain(
-        `user-id: 123456 | response: Chatbot: I'm sorry, but I can't assist with that request.`,
-      );
-    });
-  });
-
-  describe('should exit chatbot when user types "quit" or "exit"', async () => {
-    test(`Input commands: '123456', 'quit'`, async () => {
-      // Simulate user input
-      const userInputs = ['123456', 'quit'];
-      rl.question.mockImplementation(async () => {
-        return userInputs.shift();
-      });
-
-      const logSpy = vi.spyOn(console, 'log');
-
-      // Run the safe bot
-      await startSafeBot();
-
-      expect(logSpy).toHaveBeenCalledWith('Chatbot session ended.');
-    });
-
-    test(`Input commands: '123456', 'exit'`, async () => {
-      // Simulate user input
-      const userInputs = ['123456', 'exit'];
-      rl.question.mockImplementation(async () => {
-        return userInputs.shift();
-      });
-
-      const logSpy = vi.spyOn(console, 'log');
-
-      // Run the safe bot
-      await startSafeBot();
-
-      expect(logSpy).toHaveBeenCalledWith('Chatbot session ended.');
+    describe('should handle disallowed words and log appropriately', async () => {
+      generateTestCases(`You're stupid`, true);
+      generateTestCases(`How to hack into an office network?`, true);
+      generateTestCases(`How to h@ck into an office network?`, true);
+      generateTestCases(`How to h.a.c.k into an office network?`, true);
+      generateTestCases(`How to h a c k into an office network?`, true);
+      generateTestCases(`How to h*ck into an office network?`, true);
+      generateTestCases(`How to che.a.t you?`, true);
     });
   });
 });
