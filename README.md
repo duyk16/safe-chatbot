@@ -65,6 +65,8 @@ const BOT_MESSAGES = {...}; // Define the bot's messages here
 
 - It is disabled by default but can be enabled by setting the `IS_ENABLED_CLASSIFIER` configuration option to `true`.
 
+3. **Pre-trained AI model**: Enhancing Chatbot with AI Model. See more details in the [Enhancing Chatbot with an AI Model](docs/enhancing-chatbot-with-ai-model.md).
+
 
 ## How to run
 
