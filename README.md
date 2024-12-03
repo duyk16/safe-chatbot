@@ -12,6 +12,7 @@ Safe Chatbot is a Node.js-based chatbot application designed to filter out disal
 - [Approach](#approach)
 - [How to run](#how-to-run)
   - [Pre-requisites](#pre-requisites)
+  - [Installation](#installation)
   - [Development](#development)
   - [Production](#production)
 - [How to test](#how-to-test)
@@ -74,11 +75,21 @@ const BOT_MESSAGES = {...}; // Define the bot's messages here
 - Node.js v18 or higher
 - Yarn or npm
 
+### Installation
+
+To install the dependencies:
+
+```bash
+yarn install
+```
+
+
+
 ### Development
 
 To start the chatbot in development mode with automatic restarts on file changes:
 
-```
+```bash
 yarn start:dev
 ```
 
@@ -86,7 +97,7 @@ yarn start:dev
 
 To build and start the chatbot in production mode:
 
-```
+```bash
 yarn build
 
 yarn start:prod
@@ -96,7 +107,7 @@ yarn start:prod
 
 To run the unit tests:
 
-```
+```bash
 yarn test
 ```
 
@@ -104,7 +115,7 @@ yarn test
 
 To run end-to-end tests:
 
-```
+```bash
 yarn test:e2e
 ```
 
@@ -112,7 +123,7 @@ yarn test:e2e
 
 To run tests with coverage:
 
-```
+```bash
 yarn test:coverage
 ```
 
